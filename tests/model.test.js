@@ -247,7 +247,7 @@ test('scenario JSON round trip', () => {
 
 test('CSV exports are labeled and complete', () => {
   const t = m.timeCsv(base());
-  assert.match(t, /^# Encounter Check 0\.2\.0-alpha/);
+  assert.match(t, /^# Encounter Check 0\.2\.1-alpha/);
   assert.equal(t.trim().split('\n').length, 2 + 121);
   const p = m.plateCsv(base());
   assert.equal(p.trim().split('\n').length, 2 + 36);

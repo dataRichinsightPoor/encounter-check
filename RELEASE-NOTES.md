@@ -1,3 +1,26 @@
+# Encounter Check v0.2.1-alpha: release notes
+
+No. 05 in 99 Small Problems. Labeling release. The engine, equations, presets, and every computed value are unchanged from v0.2.0-alpha.
+
+## What changed
+
+- The model page, methods page, and README now carry the companion article label, Data-Rich, Insight-Poor — CCXXXVI, "Same Ratio. Different Experiment."
+- Version strings updated in the model, package, citation file, math contract, and page badges.
+
+## Links
+
+- Model: https://datarichinsightpoor.github.io/encounter-check/
+- Code: https://github.com/dataRichinsightPoor/encounter-check
+- Engine: https://github.com/dataRichinsightPoor/encounter-check/blob/v0.2.1-alpha/web/model.js
+- Math: https://datarichinsightpoor.github.io/encounter-check/methods.html
+- Math contract: https://github.com/dataRichinsightPoor/encounter-check/blob/v0.2.1-alpha/web/MATH.md
+
+## Verification
+
+58 of 58 tests pass. All scenarios are synthetic. Software verification is not biological validation.
+
+---
+
 # Encounter Check v0.2.0-alpha: release notes
 
 No. 05 in 99 Small Problems. First public research-use alpha. Version 0.1.0-alpha was a private preview and was never published; its notes are kept below for the development record.

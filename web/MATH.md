@@ -1,6 +1,6 @@
 # Encounter Check: mathematical contract
 
-99 Small Problems: Useful models for assumptions with expensive ambitions. No. 05. v0.2.0-alpha.
+99 Small Problems: Useful models for assumptions with expensive ambitions. No. 05. v0.2.1-alpha.
 
 The question is narrow. Two co-cultures share an effector-to-target ratio. Do they share an experiment? A ratio is a proportion of counts. Contact is a rate, and a rate depends on how many cells occupy the space in which they meet. This contract states what the tool computes, which assumptions produce each number, and which measurement would separate explanations that a lysis endpoint cannot.
 

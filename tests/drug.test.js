@@ -127,7 +127,7 @@ test('plate crosses doses with the design and exports them', () => {
 
 test('dose-response CSV has one column pair per density', () => {
   const lines = m.doseCsv(bi()).trim().split('\n');
-  assert.match(lines[0], /^# Encounter Check 0\.2\.0-alpha dose response/);
+  assert.match(lines[0], /^# Encounter Check 0\.2\.1-alpha dose response/);
   assert.equal(lines[1].split(',').length, 7);
   assert.equal(lines.length, 2 + 41);
   assert.throws(() => m.doseCsv(m.preset()), /bispecific/);

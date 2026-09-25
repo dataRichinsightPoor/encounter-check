@@ -1,6 +1,6 @@
 {
   "name": "encounter-check",
-  "version": "0.2.0-alpha",
+  "version": "0.2.1-alpha",
   "private": true,
   "type": "module",
   "scripts": {"test": "node --test tests/*.test.js"},

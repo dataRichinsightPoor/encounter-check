@@ -1,7 +1,11 @@
 # Encounter Check
 
 99 Small Problems: Useful models for assumptions with expensive ambitions.  
-No. 05 | Data-Rich, Insight-Poor | v0.2.0-alpha
+No. 05 | Data-Rich, Insight-Poor — CCXXXVI | v0.2.1-alpha
+
+Companion article: Data-Rich, Insight-Poor — CCXXXVI, "Same Ratio. Different Experiment."
+
+[Model](https://datarichinsightpoor.github.io/encounter-check/) · [Code](https://github.com/dataRichinsightPoor/encounter-check) · [Math](https://datarichinsightpoor.github.io/encounter-check/methods.html) · [Math contract](web/MATH.md)
 
 Same E:T ratio. Same experiment? Encounter Check is an original browser model of effector–target killing in a well. Declare cell counts, the well, and a contact-and-killing mechanism, then see when the effector-to-target ratio describes the co-culture, when density does, and which plate design separates the two.
 
@@ -14,7 +18,7 @@ Version 0.2 adds an optional bispecific bridge. Cells bind drug in proportion to
 - **[Try Encounter Check](https://datarichinsightpoor.github.io/encounter-check/):** no installation or sign-in; dark mode by default.
 - **[Read the mathematics](https://datarichinsightpoor.github.io/encounter-check/methods.html):** equations, units, derivations, numerical method, boundaries and references. The same contract is in [web/MATH.md](web/MATH.md).
 - **[Inspect the engine](https://github.com/dataRichinsightPoor/encounter-check/blob/main/web/model.js):** original dependency-free JavaScript.
-- **[Use the versioned release](https://github.com/dataRichinsightPoor/encounter-check/releases/tag/v0.2.0-alpha):** fixed source snapshot and release notes.
+- **[Use the versioned release](https://github.com/dataRichinsightPoor/encounter-check/releases/tag/v0.2.1-alpha):** fixed source snapshot and release notes.
 
 ## What it computes
 

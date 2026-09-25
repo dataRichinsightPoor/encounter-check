@@ -17,7 +17,7 @@
 // mass balance over both cell-surface pools, which is where cell density enters
 // dose–response a second time. Binding is quasi-static at time zero.
 
-export const VERSION = '0.2.0-alpha';
+export const VERSION = '0.2.1-alpha';
 export const FOOTPRINT_LIMIT = 0.25;
 
 export const AVOGADRO = 6.02214076e23;
