@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use this software, cite its version and the specific model assumptions. Numerical verification is not biological validation."
+title: "Encounter Check"
+type: software
+version: 0.2.0-alpha
+license: MIT
+repository-code: "https://github.com/dataRichinsightPoor/encounter-check"
+url: "https://datarichinsightpoor.github.io/encounter-check/"
+authors:
+  - name: "Data-Rich, Insight-Poor"
+abstract: "A research-use mass-action model of effector-target killing in a well. It tests when the effector-to-target ratio describes a co-culture and when cell density does, compares settled and bulk contact geometries, checks whether lysis can distinguish contact rate from kill probability, and designs density-resolving plates. An optional bispecific bridge adds equilibrium drug binding with depletion, so dose and density interact. Scenarios are synthetic and imply no statistical coverage, power, or therapeutic prediction."

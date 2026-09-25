@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Encounter Check · No. 05 · Data-Rich, Insight-Poor</title>
+<meta name="description" content="Same E:T ratio, same experiment? A transparent effector–target encounter and killing model for co-culture assay design.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css"><script type="module" src="app.js"></script>
+</head>
+<body>
+<a class="skip" href="#workbench">Skip to model</a>
+<header>
+<a class="brand" href="index.html"><svg viewBox="0 0 32 32" width="32" height="32" aria-label="Encounter mark" role="img"><circle cx="11" cy="16" r="8" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="22.5" cy="16" r="5.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M17 12.5v7" stroke="currentColor" stroke-width="2.2"/></svg><span>DATA-RICH, INSIGHT-POOR<small>EXECUTABLE BIOLOGY</small></span></a>
+<nav aria-label="Resources"><a href="methods.html">The math</a><a href="model.js" download>Model code ↓</a><button id="theme">Light mode</button></nav>
+</header>
+<main>
+<section class="intro">
+<div><p class="eyebrow">99 SMALL PROBLEMS <span>/</span> NO. 05</p><h1>Encounter Check</h1><p class="question">Same E:T ratio.<br>Same experiment?</p><p class="tagline">Useful models for assumptions with expensive ambitions.</p></div>
+<aside><span class="badge">RESEARCH-USE ALPHA · v0.2.0-alpha</span><h2>A ratio is a proportion.<br>Contact is a rate.</h2><p>Declare cell counts, the well, and a contact-and-killing mechanism. See when the effector-to-target ratio describes the experiment, when density does, and which plate design tells them apart.</p><p class="small">All presets are synthetic. Research exploration, not a validated assay, potency estimate, or therapeutic prediction.</p><a href="#geometry">Does volume matter, or area? ↓</a><br><a href="#contacts">Lysis cannot see contacts ↓</a><br><a href="#bridge">Same dose, different free drug ↓</a><br><a href="#plate">Build a density-resolving plate ↓</a></aside>
+</section>
+<section class="toolbar" aria-label="Synthetic examples"><label for="preset">A small problem worth testing</label><select id="preset"></select><button id="load">Load example</button></section>
+<div class="workspace" id="workbench">
+<form id="controls" novalidate>
+<fieldset><legend>01 / The well</legend>
+<div class="pair"><div><label for="E">Effectors <span>/ well</span></label><input id="E" type="number" min="0" step="any"></div><div><label for="T">Targets <span>/ well</span></label><input id="T" type="number" min="1" step="any"></div></div>
+<label for="geometry">Contact geometry</label><select id="geometry"><option value="settled">Settled on bottom area</option><option value="bulk">Bulk in medium volume</option></select>
+<div class="pair"><div><label for="volume">Medium <span>µL</span></label><input id="volume" type="number" min="0" step="any"></div><div><label for="area">Bottom area <span>mm²</span></label><input id="area" type="number" min="0" step="any"></div></div>
+<p class="hint">A flat-bottom 96-well has about 32 mm² of growth area and a flat 384-well about 5.6–6 mm² (<a href="https://www.corning.com/catalog/cls/documents/application-notes/CLS-AN-209.pdf">Corning</a>). A U- or V-bottom concentrates cells into a smaller, undeclared contact area; enter an effective value if you have one.</p>
+<div class="pair"><div><label for="window">Assay window <span>h</span></label><input id="window" type="number" min="0" step="any"></div><div><label for="readTime">Contact read <span>h</span></label><input id="readTime" type="number" min="0" step="any"></div></div>
+<label for="diameter">Cell diameter <span>µm, for crowding and settling</span></label><input id="diameter" type="number" min="0" step="any">
+</fieldset>
+<fieldset><legend>02 / Contact and killing</legend>
+<label for="k">Encounter coefficient <span id="k-unit">mm²/h</span></label><input id="k" type="number" min="0" step="any">
+<p class="hint" id="k-help">k × effector density is the encounter rate each free target experiences. It must be calibrated for the geometry; it is not a diffusion constant.</p>
+<div class="pair"><div><label for="tauC">Conjugate lifetime <span>h</span></label><input id="tauC" type="number" min="0" step="any"></div><div><label for="p">Kill probability <span id="p-unit">per conjugate</span></label><input id="p" type="number" min="0" max="1" step="any"></div></div>
+<label for="killMode">After a kill</label><select id="killMode"><option value="serial">Effector recovers, then can kill again</option><option value="single">Effector is spent · one kill each</option></select>
+<div id="recovery"><label for="tauR">Post-kill refractory time <span>h, 0 = immediate</span></label><input id="tauR" type="number" min="0" step="any"></div>
+<label for="kbg">Background target death <span>per h</span></label><input id="kbg" type="number" min="0" step="any">
+</fieldset>
+<fieldset><legend>03 / The decision</legend>
+<div class="pair"><div><label for="densityLow">Density span low <span>×</span></label><input id="densityLow" type="number" min="0" max="1" step="any"></div><div><label for="densityHigh">Density span high <span>×</span></label><input id="densityHigh" type="number" min="1" step="any"></div></div>
+<div class="pair"><div><label for="volumeFactor">Volume change <span>×</span></label><input id="volumeFactor" type="number" min="0" step="any"></div><div><label for="areaFactor">Area change <span>×</span></label><input id="areaFactor" type="number" min="0" step="any"></div></div>
+<div class="pair"><div><label for="newTargets">Targets on hand</label><input id="newTargets" type="number" min="1" step="any"></div><div><label for="altFactor">Contact rival <span>× k</span></label><input id="altFactor" type="number" min="1" step="any"></div></div>
+<p class="hint">Area change 0.175 approximates moving from a 96-well to a 384-well flat bottom. The contact rival multiplies k and re-solves the kill probability so both explanations match the reference lysis.</p>
+</fieldset>
+<fieldset><legend>04 / Bispecific bridge</legend>
+<label for="drug">Drug</label><select id="drug"><option value="none">None</option><option value="bridged">Bispecific bridge</option></select>
+<div id="drug-fields">
+<div class="pair"><div><label for="conc">Dose <span>pM total</span></label><input id="conc" type="number" min="0" step="any"></div><div><label for="depletion">Cells bind drug</label><select id="depletion"><option value="on">Yes</option><option value="off">No, free = total</option></select></div></div>
+<div class="pair"><div><label for="KT">Target arm K<sub>D</sub> <span>nM</span></label><input id="KT" type="number" min="0" step="any"></div><div><label for="KE">Effector arm K<sub>D</sub> <span>nM</span></label><input id="KE" type="number" min="0" step="any"></div></div>
+<div class="pair"><div><label for="RT">Antigens <span>/ target</span></label><input id="RT" type="number" min="0" step="any"></div><div><label for="RE">Receptors <span>/ effector</span></label><input id="RE" type="number" min="0" step="any"></div></div>
+<div class="pair"><div><label for="trigger">Trigger strength <span>s</span></label><input id="trigger" type="number" min="0" step="any"></div><div><label for="doseHigh">Curve top <span>pM</span></label><input id="doseHigh" type="number" min="0" step="any"></div></div>
+<label for="doseLow">Curve bottom <span>pM</span></label><input id="doseLow" type="number" min="0" step="any">
+<p class="hint">With the bridge on, the kill probability in 02 becomes the maximum. Each conjugate kills with probability p·(1 − e<sup>−sB</sup>), where B is the bridge index at the free drug concentration. Contact frequency is unchanged by the drug.</p>
+</div>
+</fieldset>
+<button class="primary" id="run" type="submit">Run the check</button>
+<p id="status" role="status" aria-live="polite"></p>
+<div class="exports"><button type="button" id="png">Figure PNG</button><button type="button" id="csv">Time course CSV</button><button type="button" id="dose-png">Dose figure PNG</button><button type="button" id="dose-csv">Dose response CSV</button><button type="button" id="json">Scenario JSON</button><label class="file-button">Import JSON<input id="import" type="file" accept="application/json,.json"></label></div>
+<p id="export-status" class="hint" aria-live="polite"></p>
+</form>
+<div class="results" id="results">
+<div class="result-heading"><h2 id="headline"></h2><span class="badge" id="regime-badge"></span></div>
+<div class="metrics" id="metrics"></div>
+<div class="plot-panel"><div class="plot-heading"><h3>Fixed ratio, fixed well, different density</h3><span class="badge">EFFECTOR-ATTRIBUTED LYSIS</span></div><div class="legend" id="time-legend"></div><canvas id="time" role="img" aria-label="Lysis over time at three densities with the same effector-to-target ratio"></canvas></div>
+<div class="plot-panel"><div class="plot-heading"><h3>If the ratio were enough, color would be constant along each diagonal</h3><span class="badge">LYSIS AT END OF WINDOW</span></div><canvas id="map" role="img" aria-label="Lysis map over effector and target density with fixed-ratio diagonals"></canvas><p class="hint" id="map-note"></p></div>
+<div class="table-wrap" tabindex="0"><table><caption>Initial-condition indices. They describe the first encounters, not the whole window.</caption><thead><tr><th>Quantity</th><th class="num">Value</th><th>Meaning</th></tr></thead><tbody id="indices"></tbody></table></div>
+</div>
+</div>
+
+<section class="section" id="regime"><p class="eyebrow">WHEN IS THE RATIO ENOUGH?</p><h2>Search time decides which variable matters.</h2>
+<p class="lead">Each effector alternates between searching and handling a target. When searching dominates, the killing rate per target scales with effector density and the E:T ratio is not a sufficient description. When handling dominates, effectors are saturated with targets and the fraction killed follows the ratio and the clock. The search fraction below is computed at time zero from the declared rates.</p>
+<div class="meter" aria-hidden="true"><i id="meter"></i></div><div class="meter-labels"><span>0 · handling-limited, ratio governs</span><span>1 · search-limited, density governs</span></div>
+<div class="regime" id="regime-cards">
+<article><h3>Search-limited</h3><p>Effectors spend most of their time searching. Per-target killing follows effector density, so at a fixed ratio a denser well kills faster.</p></article>
+<article><h3>Mixed</h3><p>Search and handling take comparable time. Density and ratio both move the endpoint, and neither alone describes the condition.</p></article>
+<article><h3>Handling-limited</h3><p>Effectors are saturated with targets. Each kills at close to its maximum rate, so the fraction killed tracks the ratio and the clock.</p></article>
+<article><h3>Single-use ceiling</h3><p>Effectors do not return after killing. Failed contacts can be retried, so lysis creeps toward the ratio itself and can never exceed it, however long the assay runs.</p></article>
+</div>
+</section>
+
+<section class="section" id="geometry"><p class="eyebrow">DISCRIMINATING EXPERIMENT 1</p><h2>Change the medium, keep the cells.</h2>
+<p class="lead">Suspension cells settle within minutes, so many co-cultures meet on the well bottom rather than in the liquid. The two hypotheses below are matched to give identical lysis in the reference well. They disagree about what a volume change or a plate-format change should do. If lysis follows medium volume at fixed counts, the bulk description survives; if it follows bottom area, the settled one does.</p>
+<div class="table-wrap" tabindex="0"><table><caption id="geo-caption"></caption><thead><tr><th>Condition at fixed cell counts</th><th class="num">Settled hypothesis</th><th class="num">Bulk hypothesis</th><th class="num">Separation</th><th class="num">Bottom coverage</th></tr></thead><tbody id="geo"></tbody></table></div>
+<p class="hint" id="settling"></p>
+</section>
+
+<section class="section" id="redesign"><p class="eyebrow">A PRACTICAL DECISION</p><h2>Fewer targets. Which well reproduces the reference?</h2>
+<p class="lead">When fewer target cells are available, keeping the ratio in the same well also lowers both densities. In this model only preserving both densities preserves the experiment, which means changing the well, not the ratio. Crowding and settled-area assumptions still have to hold in the smaller well.</p>
+<div class="table-wrap" tabindex="0"><table><caption id="re-caption"></caption><thead><tr><th>Design</th><th class="num">E per well</th><th class="num">T per well</th><th class="num">E:T</th><th class="num">Medium µL</th><th class="num">Area mm²</th><th class="num">Lysis</th><th class="num">vs reference</th></tr></thead><tbody id="re"></tbody></table></div>
+</section>
+
+<section class="section" id="contacts"><p class="eyebrow">DISCRIMINATING EXPERIMENT 2</p><h2>Same lysis, more contacts.</h2>
+<p class="lead">A lysis endpoint integrates contact frequency and per-contact kill probability. The rival below meets targets more often but kills less per conjugate, with its kill probability re-solved to reproduce the reference lysis exactly. A fixed-ratio density series separates the two only weakly. Measuring conjugates at the contact read time separates them directly.</p>
+<div class="table-wrap" tabindex="0"><table><caption id="id-caption"></caption><thead><tr><th>Density at fixed ratio</th><th class="num">Lysis, declared</th><th class="num">Lysis, rival</th><th class="num">Conjugated targets, declared</th><th class="num">Conjugated targets, rival</th></tr></thead><tbody id="ident"></tbody></table></div>
+<p class="hint" id="id-note"></p>
+</section>
+
+<section class="section" id="bridge"><p class="eyebrow">DISCRIMINATING EXPERIMENT 3</p><h2>Same dose, different free drug.</h2>
+<p class="lead">A bispecific links two cells only when one arm holds a target antigen and the other finds a free effector receptor. Density now enters twice. More cells per area mean more contacts, which raises the plateau. More cells per volume bind more drug, which leaves less free drug at the same nominal concentration and moves the curve right. The two effects can offset each other at a working dose, so a flat response across density does not show that the ratio suffices.</p>
+<div id="drug-off" class="boundary">The bispecific bridge is off. Switch it on in 04, or load the example “Same ratio, same dose.” Everything above then uses the drug-dependent kill probability.</div>
+<div id="drug-on">
+<div class="plot-panel"><div class="plot-heading"><h3>Dose response at a fixed ratio and three densities</h3><span class="badge">EFFECTOR-ATTRIBUTED LYSIS</span></div><div class="legend" id="dose-legend"></div><canvas id="dose" role="img" aria-label="Lysis against total drug concentration at three densities with the same effector-to-target ratio"></canvas></div>
+<div class="table-wrap" tabindex="0"><table class="design-strategies"><caption id="drug-caption"></caption><thead><tr><th>Density at fixed ratio</th><th class="num">Plateau</th><th class="num">EC50, free</th><th class="num">EC50, total</th><th class="num">Drug on cells at EC50</th><th class="num">Free fraction at dose</th><th class="num">Lysis at dose</th></tr></thead><tbody id="drug-table"></tbody></table></div>
+<p class="hint" id="drug-note"></p>
+<p class="hint" id="drug-probe"></p>
+</div>
+</section>
+
+<section class="section" id="plate"><p class="eyebrow">THE USEFUL OUTPUT</p><h2>A plate that separates density from ratio.</h2>
+<p class="lead">Cross E:T ratio with target count and medium volume. Ratio-only thinking predicts flat rows across target counts. Density-dependent killing predicts a slope. The volume factor tests which density applies. Predictions use the declared mechanism under both matched geometries; wells are laid out in row order for a 96-well plate.</p>
+<form class="plate-form" id="plate-form" novalidate>
+<div><label for="pl-ratios">E:T ratios</label><input id="pl-ratios"></div>
+<div><label for="pl-targets">Target cells per well</label><input id="pl-targets"></div>
+<div><label for="pl-volumes">Medium µL</label><input id="pl-volumes"></div>
+<div id="pl-doses-wrap"><label for="pl-doses">Doses pM</label><input id="pl-doses"></div>
+<div><label for="pl-reps">Replicates</label><input id="pl-reps" type="number" min="1" max="12" step="1"></div>
+<div class="actions"><button type="submit" class="primary">Build plate map</button><button type="button" id="plate-csv">Plate map CSV</button><span id="plate-status" class="hint" role="status"></span></div>
+</form>
+<div class="plate" id="plate-grid" aria-label="Plate layout colored by predicted lysis under the nominal geometry"></div>
+<div class="table-wrap" tabindex="0"><table><caption>One row per condition. Lysis is effector-attributed, at the end of the window. Dashed wells exceed 25% bottom coverage, where well-mixed contact is questionable.</caption><thead><tr><th class="num">#</th><th class="num">E:T</th><th class="num">E</th><th class="num">T</th><th class="num">µL</th><th class="num drugcol">pM</th><th class="num drugcol">Free</th><th class="num">Settled</th><th class="num">Bulk</th><th class="num">Conjugated at read</th><th class="num">Search fraction</th><th class="num">Coverage</th></tr></thead><tbody id="plate-table"></tbody></table></div>
+</section>
+
+<section class="section" id="limits"><p class="eyebrow">WHAT THIS MODEL IS NOT</p><h2>Boundaries, stated plainly.</h2>
+<div class="boundary"><strong>Scope.</strong> A well-mixed, short-window, mass-action model of one effector population meeting one target population, with one contact state, one kill transition, optional effector recovery, and first-order background death. It excludes proliferation, activation delay, exhaustion, cytokine effects, multicellular conjugates, cooperative killing, target heterogeneity, motility-limited or spatially aggregated contact, and adherent geometry. Each could change the ranking.</div>
+<div class="boundary"><strong>The bridge.</strong> Drug binding is monovalent to each cell pool, at equilibrium, and fixed at time zero. Bridges are assumed rare relative to singly bound drug in the mass balance. Surface cross-linking constants are taken as proportional to the solution affinities, with no cooperativity, avidity, receptor internalization, shedding, or soluble antigen. The drug changes what a contact does, not how often contacts happen. Relative EC50 is measured against each well’s own plateau.</div>
+<div class="boundary"><strong>Inference.</strong> Rate constants are declared, not fitted. There is no confidence coverage, no power calculation, and no cost weighting. The indices describe time zero. A lysis endpoint alone cannot identify the encounter coefficient and the per-contact kill probability separately; that is the point of the contact read.</div>
+<div class="boundary"><strong>Verification.</strong> The code is tested against analytic limits, conservation laws, and scaling identities. Software verification is not biological validation. Presets are synthetic and do not describe any specific molecule, cell product, or assay.</div>
+</section>
+</main>
+<footer><span>Encounter Check · No. 05 · <span id="version"></span> · MIT license · original code</span><span>Foundations: <a href="https://pubmed.ncbi.nlm.nih.gov/24739177/">Gadhamsetty et al., 2014</a> · <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6152432/">Jiang et al., 2018</a> · <a href="https://doi.org/10.1021/ja311795d">Douglass et al., 2013</a> · <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3025913/">Ganusov et al., 2011</a></span></footer>
+</body>
+</html>
